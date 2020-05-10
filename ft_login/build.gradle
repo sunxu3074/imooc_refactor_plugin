@@ -1,4 +1,5 @@
-apply plugin: 'com.android.library'
+//apply plugin: 'com.android.library' //打包出来的是aar
+apply plugin: 'com.android.application' //打包出来的是apk
 apply plugin: 'com.alibaba.arouter'
 
 android {
@@ -6,6 +7,7 @@ android {
   buildToolsVersion rootProject.android.buildToolsVersion
 
   defaultConfig {
+    applicationId 'com.imooc.ft_login'
     minSdkVersion rootProject.android.minSdkVersion
     targetSdkVersion rootProject.android.targetSdkVersion
     versionCode 1
@@ -30,24 +32,40 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  compileOnly rootProject.depsLibs.appcompact
-  compileOnly rootProject.depsLibs.design
-  compileOnly rootProject.depsLibs.recyclerview
-  compileOnly rootProject.depsLibs.constraint
+  implementation rootProject.depsLibs.appcompact
+  implementation rootProject.depsLibs.design
+  implementation rootProject.depsLibs.recyclerview
+  implementation rootProject.depsLibs.constraint
   //eventbus类库依赖
-  compileOnly rootProject.depsLibs.eventbus
+  implementation rootProject.depsLibs.eventbus
   //gson解析库
-  compileOnly rootProject.depsLibs.gson
+  implementation rootProject.depsLibs.gson
   //arouter库
-  compileOnly(rootProject.depsLibs.arouterapi) {
+  implementation(rootProject.depsLibs.arouterapi) {
     exclude group: 'com.android.support'
   }
   annotationProcessor rootProject.depsLibs.aroutercompiler
 
   //网络请求库
-  compileOnly project(':lib_network')
+  implementation project(':lib_network')
   //业务基础库
-  compileOnly project(':lib_base')
+  implementation project(':lib_base')
   //基础UI库
-  compileOnly project(':lib_commin_ui')
+  implementation project(':lib_commin_ui')
+}
+
+//引入插件
+apply plugin: 'replugin-plugin-gradle'
+//插件配置
+repluginPluginConfig{
+  //当前插件的名称，其他插件通过这个名称来访问当前插件
+  pluginName = 'ft_login'
+  //宿主applicationid，当前插件被集成到哪个宿主工程中去，比如多渠道打包的时候需要修改这个applicationid
+  hostApplicationId = 'com.imooc.imooc_voice'
+  //宿主工程启动的activity
+  hostAppLauncherActivity = 'com.imooc.ft_loading.view.loading.LoadingActivity'
+}
+//添加依赖
+dependencies {
+  implementation 'com.qihoo360.replugin:replugin-plugin-lib:2.3.3'
 }

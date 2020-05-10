@@ -7,28 +7,35 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
+
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.gson.Gson;
 import com.imooc.ft_home.R;
 import com.imooc.ft_home.constant.Constant;
 import com.imooc.ft_home.model.CHANNEL;
 import com.imooc.ft_home.utils.Utils;
 import com.imooc.ft_home.view.home.adpater.HomePagerAdapter;
+import com.imooc.lib_base.ILoginService;
 import com.imooc.lib_base.ft_audio.model.CommonAudioBean;
 import com.imooc.lib_base.ft_audio.service.impl.AudioImpl;
+import com.imooc.lib_base.ft_login.LoginPluginConfig;
 import com.imooc.lib_base.ft_login.model.LoginEvent;
+import com.imooc.lib_base.ft_login.model.user.User;
 import com.imooc.lib_base.ft_login.service.impl.LoginImpl;
 import com.imooc.lib_commin_ui.base.BaseActivity;
 import com.imooc.lib_commin_ui.pager_indictor.ScaleTransitionPagerTitleView;
 import com.imooc.lib_image_loader.app.ImageLoaderManager;
 import com.imooc.lib_update.app.UpdateHelper;
-import java.util.ArrayList;
+
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -36,9 +43,12 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 /**
  * 首页Activity
@@ -72,6 +82,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
    */
   private ArrayList<CommonAudioBean> mLists = new ArrayList<>();
 
+  private UserBroadcastReceiver userBroadcastReceiver;
+
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     registerBroadcastReceiver();
@@ -79,6 +92,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     setContentView(R.layout.activity_main);
     initView();
     initData();
+    registerUserReceiver();
   }
 
   private void initData() {
@@ -181,11 +195,26 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
     if (id == R.id.unloggin_layout) {
-      if (!LoginImpl.getInstance().hasLogin()) {
-        LoginImpl.getInstance().login(this);
-      } else {
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
-      }
+//      if (!LoginImpl.getInstance().hasLogin()) {
+//        LoginImpl.getInstance().login(this);
+//      } else {
+//        mDrawerLayout.closeDrawer(Gravity.LEFT);
+//      }
+//      IBinder binder = RePlugin.fetchBinder(LoginPluginConfig.PLUGIN_NAME, LoginPluginConfig.KEY_INTERFACE);
+//      if(binder == null){
+//        return;
+//      }
+//      ILoginService loginService = ILoginService.Stub.asInterface(binder);
+//      try{
+//        if(!loginService.hasLogin()){
+//          Intent intent = new RePLugin.createIntent(LoginPluginConfig.PLUGIN_NAME, LoginPluginConfig.PAGE.PAGE_LOGIN);
+//          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//          RePlugin.startActivity(this, intent);
+//        }else{
+//          mDrawerLayout.closeDrawer(Gravity.LEFT);
+//        }
+//      }catch (Exception e){
+//      }
       return;
     }
 
@@ -238,6 +267,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     super.onDestroy();
     EventBus.getDefault().unregister(this);
     unRegisterBroadcastReceiver();
+    unRegisterUserReceiver();
   }
 
   @Override public void doCameraPermission() {
@@ -294,4 +324,37 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     ImageLoaderManager.getInstance()
         .displayImageForCircle(mPhotoView, LoginImpl.getInstance().getUserInfo().data.photoUrl);
   }
+
+  private void updateLoginUI(String data){
+    unLogginLayout.setVisibility(View.GONE);
+    mPhotoView.setVisibility(View.VISIBLE);
+    ImageLoaderManager.getInstance().displayImageForCircle(mPhotoView,
+            new Gson().fromJson(data, User.class).data.photoUrl);
+  }
+
+  private class UserBroadcastReceiver extends BroadcastReceiver{
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String action = intent.getAction();
+      if(LoginPluginConfig.ACTION.LOGIN_SUCCESS_ACTION.equals(action)){
+        updateLoginUI(intent.getStringExtra(LoginPluginConfig.ACTION.KEY_DATA));
+      }
+    }
+  }
+
+  private void registerUserReceiver(){
+    if(userBroadcastReceiver == null){
+      userBroadcastReceiver = new UserBroadcastReceiver();
+    }
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(LoginPluginConfig.ACTION.LOGIN_SUCCESS_ACTION);
+    registerReceiver(userBroadcastReceiver, filter);
+  }
+
+  private void unRegisterUserReceiver(){
+    if(userBroadcastReceiver != null){
+      unregisterReceiver(userBroadcastReceiver);
+    }
+  }
+
 }

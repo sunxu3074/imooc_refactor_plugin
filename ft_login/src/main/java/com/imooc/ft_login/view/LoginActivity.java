@@ -1,15 +1,19 @@
-package com.imooc.ft_login;
+package com.imooc.ft_login.view;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
-import com.imooc.ft_login.inter.IUserLoginView;
-import com.imooc.ft_login.presenter.UserLoginPresenter;
-import com.imooc.lib_commin_ui.base.BaseActivity;
 
-public class LoginActivity extends BaseActivity implements IUserLoginView {
+import com.imooc.ft_login.R;
+import com.imooc.ft_login.view.inter.IUserLoginView;
+import com.imooc.ft_login.view.presenter.UserLoginPresenter;
+import com.imooc.lib_commin_ui.base.BaseActivity;
+import com.imooc.lib_commin_ui.base.plugin.PluginBaseActivity;
+import com.qihoo360.replugin.loader.a.PluginFragmentActivity;
+
+public class LoginActivity extends PluginBaseActivity implements IUserLoginView {
 
   private UserLoginPresenter mUserLoginPresenter;
 

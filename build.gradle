@@ -23,11 +23,15 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.4.1'
+    classpath 'com.android.tools.build:gradle:3.5.3'
     //greendao插件依赖
     classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
     //ARouter插件依赖
     classpath "com.alibaba:arouter-register:1.0.2"
+    //replugin宿主插件库
+    classpath 'com.qihoo360.replugin:replugin-host-gradle:2.3.3'
+    //replugin插件库
+    classpath 'com.qihoo360.replugin:replugin-plugin-gradle:2.3.3'
   }
 }
 

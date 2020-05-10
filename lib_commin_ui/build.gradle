@@ -25,4 +25,6 @@ dependencies {
     //可以用arouter去掉此依赖
     compileOnly project(':lib_image_loader')
     api rootProject.depsLibs.magicindicator
+    //占位插件库工程，这样在插件库工程中才能访问这个插件的api
+    compileOnly 'com.qihoo360.replugin:replugin-plugin-lib:2.3.3'
 }

@@ -1,4 +1,4 @@
-package com.imooc.ft_login.inter;
+package com.imooc.ft_login.view.inter;
 
 /**
  * UI层对外提供的方法
