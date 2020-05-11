@@ -15,7 +15,11 @@ public class LoadingActivity extends BaseActivity {
 
   private Handler mHandler = new Handler() {
     @Override public void handleMessage(Message msg) {
-      HomeImpl.getInstance().startHomActivity(LoadingActivity.this);
+//      HomeImpl.getInstance().startHomActivity(LoadingActivity.this);
+      Intent intent = new RePLugin.createIntent("ft_home", "com.imooc.ft_home.view.home.HomeActivity");
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      RePlugin.startActivity(this, intent);
+      finish();
     }
   };
 

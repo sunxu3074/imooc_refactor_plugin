@@ -1,5 +1,7 @@
 package com.imooc.ft_home.view.home.adpater;
 
+import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -7,6 +9,7 @@ import com.imooc.ft_home.model.CHANNEL;
 import com.imooc.ft_home.view.discory.DiscoryFragment;
 import com.imooc.ft_home.view.friend.FriendFragment;
 import com.imooc.ft_home.view.mine.MineFragment;
+import com.qihoo360.replugin.RePlugin;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
@@ -34,4 +37,22 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
   @Override public int getCount() {
     return mList == null ? 0 : mList.length;
   }
+
+  /**
+   * 获取插件中的MineFragment
+   */
+  private Fragment getMineFragment(){
+    Fragment fragment = null;
+    Context pluginContext = RePlugin.fetchContext("ft_mine");
+    if(pluginContext != null){
+      ClassLoader classLoader = RePlugin.fetchClassLoader("ft_mine");
+      try {
+        fragment = classLoader.loadClass("xxx.MineFragment")
+                .asSubclass(Fragment.class).newInstance();
+      }catch (Exception e){
+      }
+    }
+    return fragment;
+  }
+
 }

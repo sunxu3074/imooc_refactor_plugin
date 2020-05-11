@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.imooc.ft_home.R;
+import com.qihoo360.replugin.RePlugin;
 
 public class MineFragment extends Fragment {
 
@@ -27,7 +28,8 @@ public class MineFragment extends Fragment {
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View rootView = inflater.inflate(R.layout.fragment_mine_layout, null);
+    //宿主工程的LayoutInflater不能加载插件工程中的资源，需要使用插件工程的Context创建出来的LayoutInflater
+    View rootView = LayoutInflater.from(RePlugin.getPluginContext()).inflate(R.layout.fragment_mine_layout, null);
     return rootView;
   }
 

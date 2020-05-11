@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,14 +23,13 @@ import com.imooc.ft_home.constant.Constant;
 import com.imooc.ft_home.model.CHANNEL;
 import com.imooc.ft_home.utils.Utils;
 import com.imooc.ft_home.view.home.adpater.HomePagerAdapter;
-import com.imooc.lib_base.ILoginService;
 import com.imooc.lib_base.ft_audio.model.CommonAudioBean;
 import com.imooc.lib_base.ft_audio.service.impl.AudioImpl;
 import com.imooc.lib_base.ft_login.LoginPluginConfig;
 import com.imooc.lib_base.ft_login.model.LoginEvent;
 import com.imooc.lib_base.ft_login.model.user.User;
 import com.imooc.lib_base.ft_login.service.impl.LoginImpl;
-import com.imooc.lib_commin_ui.base.BaseActivity;
+import com.imooc.lib_commin_ui.base.plugin.PluginBaseActivity;
 import com.imooc.lib_commin_ui.pager_indictor.ScaleTransitionPagerTitleView;
 import com.imooc.lib_image_loader.app.ImageLoaderManager;
 import com.imooc.lib_update.app.UpdateHelper;
@@ -53,7 +51,7 @@ import java.util.ArrayList;
 /**
  * 首页Activity
  */
-public class HomeActivity extends BaseActivity implements View.OnClickListener {
+public class HomeActivity extends PluginBaseActivity implements View.OnClickListener {
 
   public static void start(Context context) {
     Intent intent = new Intent(context, HomeActivity.class);
